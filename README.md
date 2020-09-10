@@ -10,7 +10,6 @@ An SSh wrapper to retrieve sshpass credentials and use it to loggin in the remot
 \__ \__ \ | | \ V  V /| | | (_| | |_) | |_) |  __/ |   
 |___/___/_| |_|\_/\_/ |_|  \__,_| .__/| .__/ \___|_|   
                                 |_|   |_|              
-                                                                                                                      
 ```
 
 ## Usage
@@ -25,9 +24,9 @@ To:
 ```bash
     $ sshpass -pPassword ssh [args] my.ssh.server [more args]
 ```
-If no sshpass entry is found, the vanilla version of `ssh` will be used instead without any changes.
+If no sshpass entry is found, the vanilla version of `ssh` (usually `/usr/bin/ssh`) will be used instead, without any changes.
 
-The `$HOME/.ssh/sshpass` file can be configured using any placeholder accepted by `$HOME/.ssh/config` file, i.e **?** and **\***. The examples below are valid entries in `$HOME/.ssh/sshpass`:
+The `$HOME/.ssh/sshpass` file can be configured using any placeholder accepted by `$HOME/.ssh/config` file, i.e **?** and **\***. The examples below are valid entries in `$HOME/.ssh/sshpass`, and the `LocalCommand` session must be similar to:
 
 ```config
 Host my.ssh.server
@@ -37,7 +36,7 @@ Host *.local
     LocalCommand    sshpass -f fileContainingThePassword
 ```
 
-**Don't** put any other option than `LocalCommand` in `$HOME/.ssh/sshpass` because they will be **ignored** during the connection. Other optins can be put in regular `$HOME/.ssh/config` file.
+**Don't** put any other option than `LocalCommand` in `$HOME/.ssh/sshpass` because they will be **ignored** during the connection. Other options can be put in regular `$HOME/.ssh/config` file, as usual.
 
 ## Installation
 
@@ -45,10 +44,10 @@ Host *.local
 
 1. Get it
 
-Download the file ssh.sh.
+Download the file named `ssh.sh`.
 
 ```bash
-    $ curl -O path/to/ssh.sh
+    $ curl -O https://raw.githubusercontent.com/lfromanini/sshWrapper/master/ssh.sh
 ```
 
 2. Include it
@@ -62,8 +61,9 @@ Then source the file in your `~/.bashrc` and/or `~/.zshrc`:
 ```
 
 ```diff
-- ( ... )
+  ( ... )
 + source path/to/ssh.sh
+  ( ... )
 ```
 
 Finally, reload your configurations.
