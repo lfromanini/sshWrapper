@@ -14,7 +14,7 @@ An SSh wrapper to retrieve sshpass credentials and use it to loggin in the remot
 
 ## Usage
 
-If `ssh` is called, the **sshWrapper** will search in `$HOME/.ssh/sshpass` file the credentials to the host and use to connect to host. The command will be *transformed* from:
+If `ssh` is called, the **sshWrapper** will search in `~/.ssh/sshpass` file the credentials to the host and use to connect to host. The command will be *transformed* from:
 
 ```bash
     $ ssh [args] my.ssh.server [more args]
@@ -22,27 +22,29 @@ If `ssh` is called, the **sshWrapper** will search in `$HOME/.ssh/sshpass` file 
 To:
 
 ```bash
-    $ sshpass -pPassword ssh [args] my.ssh.server [more args]
+    $ sshpass -pPassword ssh [args] my.ssh.server [more args] -o PreferredAuthentications=password
+    $ # or, if a file containing the password is informed:
+    $ sshpass -fPath/to/PasswordFile ssh [args] my.ssh.server [more args] -o PreferredAuthentications=password
 ```
 If no sshpass entry is found, the vanilla version of `ssh` (usually `/usr/bin/ssh`) will be used instead, without any changes.
 
-The `$HOME/.ssh/sshpass` file can be configured using any placeholder accepted by `$HOME/.ssh/config` file, i.e **?** and **\***. The examples below are valid entries in `$HOME/.ssh/sshpass`, and the `LocalCommand` session must be similar to:
+The `~/.ssh/sshpass` file can be configured using any placeholder accepted by `~/.ssh/config` file, i.e **?** and **\***. The examples below are valid entries in `~/.ssh/sshpass`, and the `LocalCommand` session must be similar to:
 
 ```config
 Host my.ssh.server
     LocalCommand    sshpass -p thisIsThePassword
 
 Host *.local
-    LocalCommand    sshpass -f fileContainingThePassword
+    LocalCommand    sshpass -f path/to/fileContainingThePassword
 ```
 
-**Don't** put any other option than `LocalCommand` in `$HOME/.ssh/sshpass` because they will be **ignored** during the connection. Other options can be put in regular `$HOME/.ssh/config` file, as usual.
+**Don't** put any other option than `LocalCommand` in `~/.ssh/sshpass` because they will be **ignored** during the connection. Other options can be put in regular `~/.ssh/config` file, as usual.
 
 ## Installation
 
 ### Bash and Zsh
 
-1. Get it
+1. Get it:
 
 Download the file named `ssh.sh`.
 
@@ -50,7 +52,7 @@ Download the file named `ssh.sh`.
     $ curl -O https://raw.githubusercontent.com/lfromanini/sshWrapper/master/ssh.sh
 ```
 
-2. Include it
+2. Include it:
 
 Then source the file in your `~/.bashrc` and/or `~/.zshrc`:
 
@@ -70,11 +72,12 @@ Finally, reload your configurations.
 
 ```bash
     $ source ~/.bashrc
-    # and/or
+    # or
     $ source ~/.zshrc
 ```
-Done!
+3. Done!
 
 #### Requirements
 
 * [sshpass](https://linux.die.net/man/1/sshpass)
+* Because of the potential for abuse, the `~/.ssh/sshpass` file must have strict permissions: read/write for the user, and not accessible by others.
