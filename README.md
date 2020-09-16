@@ -81,3 +81,7 @@ Finally, reload your configurations.
 
 * [sshpass](https://linux.die.net/man/1/sshpass)
 * Because of the potential for abuse, the `~/.ssh/sshpass` file must have strict permissions: read/write for the user, and not accessible by others.
+
+## Security Warning
+
+This method requires you to store the passwords insecurely in a plain unencrypted text file. Most user should use SSh's more secure public key authentication instead.
