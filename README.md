@@ -1,7 +1,7 @@
 <img align="right" src="https://cdn.rawgit.com/sindresorhus/awesome/d7305f38d29fed78fa85652e3a63e154dd8e8829/media/badge.svg">
 
 # sshWrapper
-An SSh wrapper to retrieve sshpass credentials and use it to loggin in the remote host.
+An SSh wrapper to retrieve sshpass credentials and use it to log-in in the remote host.
 
 ```
          _  __        __                               
@@ -14,7 +14,7 @@ An SSh wrapper to retrieve sshpass credentials and use it to loggin in the remot
 
 ## Usage
 
-If `ssh` is called, the **sshWrapper** will search in `~/.ssh/sshpass` file the credentials to the host and use to connect to host. The command will be *transformed* from:
+If `ssh` is called, **sshWrapper** will search in `~/.ssh/sshpass` file the credentials to the host and use to connect to host. The command will be *transformed* from:
 
 ```bash
 ssh [args] my.ssh.server [more args]
@@ -38,7 +38,7 @@ Host *.local
     LocalCommand    sshpass -f path/to/fileContainingThePassword
 ```
 
-**Don't** put any other option than `LocalCommand` in `~/.ssh/sshpass` because they will be **ignored** during the connection. Other options can be put in regular `~/.ssh/config` file, as usual.
+**Don't** put any other option than `LocalCommand` in `~/.ssh/sshpass` because it will be **ignored** during the connection. Other options can be put in regular `~/.ssh/config` file, as usual.
 
 ## Installation
 
