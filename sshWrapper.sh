@@ -39,4 +39,6 @@ function __sshWrapper::ssh()
 }
 
 # replace ssh only if sshpass is available
-[ -z "$( whereis -b sshpass | command awk '{ print $2 }' )" ] && echo "Can't use sshWrapper : missing sshpass" || alias ssh="__sshWrapper::ssh"
+[ -z "$( whereis -b sshpass | command awk '{ print $2 }' )" ] && echo "Can't use sshWrapper : missing sshpass" && return 1
+
+alias ssh="__sshWrapper::ssh"
