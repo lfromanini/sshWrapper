@@ -11,6 +11,9 @@
 # Host *.local
 # 	LocalCommand	sshpass -f path/to/fileContainingThePassword
 
+# replace ssh only if sshpass is available
+[ -z "$( whereis -b sshpass | awk '{ print $2 }' )" ] && printf "Can't use sshWrapper : missing sshpass\n" && return 1
+
 function __sshwrapper::ssh()
 {
 	local readonly SSH=$( whereis -b ssh | awk '{ print $2 }' )
@@ -37,8 +40,5 @@ function __sshwrapper::ssh()
 		command sshpass "${argType}""${argPass}" "${SSH}" "$@" -o PreferredAuthentications=password
 	fi
 }
-
-# replace ssh only if sshpass is available
-[ -z "$( whereis -b sshpass | awk '{ print $2 }' )" ] && echo "Can't use sshWrapper : missing sshpass" && return 1
 
 alias ssh="__sshwrapper::ssh"
