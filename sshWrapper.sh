@@ -12,17 +12,17 @@
 # 	LocalCommand	sshpass -f path/to/fileContainingThePassword
 
 # replace ssh only if sshpass is available
-[ -z "$( whereis -b sshpass | awk '{ print $2 }' )" ] && printf "Can't use sshWrapper : missing sshpass\n" && return 1
+[ -z "$( whereis -b sshpass | command awk '{ print $2 }' )" ] && printf "Can't use sshWrapper : missing sshpass\n" && return 1
 
 function __sshwrapper::ssh()
 {
-	local readonly SSH=$( whereis -b ssh | awk '{ print $2 }' )
+	local readonly SSH=$( whereis -b ssh | command awk '{ print $2 }' )
 
 	local args=""
 	local argType=""
 	local argPass=""
 
-	args=$( "${SSH}" "$@" -F ~/.ssh/sshpass -G 2>/dev/null | grep --max-count=1 --ignore-case "LocalCommand \+sshpass" | awk '{ $1=$2="" ; print $0 }' | sed 's/^[[:blank:]]*//' )
+	args=$( "${SSH}" "$@" -F ~/.ssh/sshpass -G 2>/dev/null | command grep --max-count=1 --ignore-case "LocalCommand \+sshpass" | command awk '{ $1=$2="" ; print $0 }' | command sed 's/^[[:blank:]]*//' )
 
 	if [ -z "${args}" ] ; then
 
@@ -32,10 +32,10 @@ function __sshwrapper::ssh()
 	else
 
 		argType="${args:0:2}"
-		argPass=$( echo "${args:2}" | sed 's/^[[:blank:]]*//' )
+		argPass=$( echo "${args:2}" | command sed 's/^[[:blank:]]*//' )
 
 		# variable expansion
-		if [ "${argType}" = "-f" ] ; then argPass=$( eval echo "${argPass}" ) ; fi
+		[ "${argType}" = "-f" ] && argPass=$( eval echo "${argPass}" )
 
 		command sshpass "${argType}""${argPass}" "${SSH}" "$@" -o PreferredAuthentications=password
 	fi
