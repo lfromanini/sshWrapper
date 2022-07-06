@@ -14,6 +14,8 @@ An SSh wrapper to retrieve sshpass credentials and use it to log-in in the remot
 
 ## Usage
 
+This wrapper works with `ssh` and `scp`!
+
 If `ssh` is called, **sshWrapper** will search in `~/.ssh/sshpass` file the credentials to the host and use to connect to host. The command will be *transformed* from:
 
 ```bash
@@ -34,11 +36,16 @@ The `~/.ssh/sshpass` file can be configured using any placeholder accepted by `~
 Host my.ssh.server
     LocalCommand    sshpass -p thisIsThePassword
 
-Host *.local
+Host *.localdomain
     LocalCommand    sshpass -f path/to/fileContainingThePassword
 ```
 
 **Don't** put any other option than `LocalCommand` in `~/.ssh/sshpass` because it will be **ignored** during the connection. Other options can be put in regular `~/.ssh/config` file, as usual.
+
+#### Limitations
+
+Because the way `ssh` deals with config options, **only one password per host is allowed** for now, which means that every user will share the same password during connection. If you want to use a user with a different password than the registred in `~/.ssh/sshpass` to connect to server, you need to escape **sshWrapper** alias with `command ssh`, otherwise, a wrong password will be used without any prompt.
+
 
 ## Installation
 
