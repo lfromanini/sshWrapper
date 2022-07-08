@@ -30,6 +30,8 @@ sshpass -fPath/to/PasswordFile ssh [args] my.ssh.server [more args] -o Preferred
 ```
 If no sshpass entry is found, the vanilla version of `ssh` (usually `/usr/bin/ssh`) will be used instead, without any changes.
 
+The same logic applies to `scp`.
+
 The `~/.ssh/sshpass` file can be configured using any placeholder accepted by `~/.ssh/config` file, i.e **?** and **\***. The examples below are valid entries in `~/.ssh/sshpass`, and the `LocalCommand` session must be similar to:
 
 ```config
@@ -40,7 +42,7 @@ Host *.localdomain
     LocalCommand    sshpass -f path/to/fileContainingThePassword
 ```
 
-**Don't** put any other option than `LocalCommand` in `~/.ssh/sshpass` because it will be **ignored** during the connection. Other options can be put in regular `~/.ssh/config` file, as usual.
+**Don't** add any other option than `LocalCommand` in `~/.ssh/sshpass` because it will be **ignored** during the connection. Other options can be added to regular `~/.ssh/config` file, as usual.
 
 #### Limitations
 
