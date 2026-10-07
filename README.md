@@ -69,6 +69,40 @@ Host *.localdomain
 
 For `-f`, the password file path supports `~`, `$HOME`, `$PWD`, and other environment variables through `envsubst`.
 
+#### Limitations
+
+##### Passwords containing spaces
+
+Passwords containing spaces are not supported when using the `-p` option in `~/.ssh/sshpass`.
+
+The `LocalCommand` configuration is parsed using `awk`, so whitespace in the password cannot be reliably preserved. If the password contains spaces, use the `-f` option and store the password in a file instead:
+
+```config
+Host my.ssh.server
+    LocalCommand sshpass -f ~/.ssh/my-password
+```
+
+This also follows the recommended approach documented by [`sshpass`](https://linux.die.net/man/1/sshpass), which recommends using a password file when possible.
+
+##### Password file paths containing spaces
+
+Password file paths containing spaces are also not supported by the current `LocalCommand` parsing.
+
+As a workaround, use a path without spaces, for example by creating a symbolic link:
+
+```bash
+ln -s "/path/with spaces/password" ~/.ssh/my-password
+```
+
+Then configure `sshpass` to use the path without spaces:
+
+```config
+Host my.ssh.server
+    LocalCommand sshpass -f ~/.ssh/my-password
+```
+
+This is a limitation of the current `sshWrapper` implementation, not a limitation of `sshpass` itself.
+
 ## Installation
 
 ### Bash and Zsh
