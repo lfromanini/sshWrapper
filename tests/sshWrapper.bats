@@ -25,6 +25,17 @@ function teardown() { true ; }
 	[[ "${output}" == "mocked-sshpass -f${SSH_MOCK_PASSWORD_FILE} ${PATH_MOCKS_DIR}/ssh -p 2222 ${SSH_MOCK_FILE_HOST}" ]]
 }
 
+@test "zsh can load sshWrapper and execute ssh" {
+	run zsh -c '
+		setopt aliases
+		source "'"${PATH_BIN}"'/sshWrapper.sh"
+		eval "ssh -p 2222 '"${SSH_MOCK_PASSWORD_HOST}"'"
+	'
+
+	[[ "${status}" == 0 ]]
+	[[ "${output}" == "mocked-sshpass -p${SSH_MOCK_PASSWORD} ${PATH_MOCKS_DIR}/ssh -p 2222 ${SSH_MOCK_PASSWORD_HOST}" ]]
+}
+
 @test "sshpass -pthisIsThePassword scp -P 2222 password.example.com:/tmp/file ." {
 	run __sshWrapper scp -P 2222 "${SSH_MOCK_PASSWORD_HOST}:/tmp/file" .
 
