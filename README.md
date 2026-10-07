@@ -3,6 +3,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![GitHub stars](https://img.shields.io/github/stars/lfromanini/sshWrapper)](https://github.com/lfromanini/sshWrapper/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/lfromanini/sshWrapper)](https://github.com/lfromanini/sshWrapper/issues)
+[![CI](https://github.com/lfromanini/sshWrapper/actions/workflows/ci.yaml/badge.svg)](https://github.com/lfromanini/sshWrapper/actions/workflows/ci.yaml)
 
 An SSH wrapper that retrieves `sshpass` credentials and uses them to log in to remote hosts.
 
