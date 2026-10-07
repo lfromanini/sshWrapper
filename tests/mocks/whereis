@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+[[ "${1}" == "-b" ]] && case "${2}" in
+	ssh|scp)
+		printf '%s: %s\n' "${2}" "${PATH_MOCKS_DIR}/${2}"
+	;;
+
+	sshpass)
+		[[ "${SSH_MOCK_SSH_PASS_INSTALLED:-true}" == "true" ]] && printf 'sshpass: %s\n' "${PATH_MOCKS_DIR}/${2}" || printf 'sshpass:\n'
+	;;
+esac

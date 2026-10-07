@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+if [[ "${!#}" == "-G" ]] ; then
+	case "$*" in
+		*"${SSH_MOCK_PASSWORD_HOST}"*)
+			cat <<- EOF
+				Host ${SSH_MOCK_PASSWORD_HOST}
+					LocalCommand sshpass -p ${SSH_MOCK_PASSWORD}
+			EOF
+		;;
+
+		*"${SSH_MOCK_FILE_HOST}"*)
+			cat <<- EOF
+				Host ${SSH_MOCK_FILE_HOST}
+					LocalCommand sshpass -f ${SSH_MOCK_PASSWORD_FILE}
+			EOF
+		;;
+
+		*"${SSH_MOCK_INVALID_OPTION_HOST}"*)
+			cat <<- EOF
+				Host ${SSH_MOCK_INVALID_OPTION_HOST}
+					LocalCommand sshpass -x invalid
+			EOF
+		;;
+
+		*"${SSH_MOCK_OTHER_COMMAND_HOST}"*)
+			cat <<- EOF
+				Host ${SSH_MOCK_OTHER_COMMAND_HOST}
+					LocalCommand something -p password
+			EOF
+		;;
+	esac
+
+	exit 0
+fi
+
+printf 'mocked-ssh %s' "$*"
