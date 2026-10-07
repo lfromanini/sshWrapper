@@ -16,6 +16,13 @@ if [[ "${!#}" == "-G" ]] ; then
 			EOF
 		;;
 
+		*"${SSH_MOCK_ENV_HOST}"*)
+			cat <<- EOF
+				Host ${SSH_MOCK_ENV_HOST}
+					LocalCommand sshpass -e
+			EOF
+		;;
+
 		*"${SSH_MOCK_INVALID_OPTION_HOST}"*)
 			cat <<- EOF
 				Host ${SSH_MOCK_INVALID_OPTION_HOST}

@@ -50,6 +50,13 @@ function teardown() { true ; }
 	[[ "${output}" == "mocked-sshpass -f${SSH_MOCK_PASSWORD_FILE} ${PATH_MOCKS_DIR}/scp -P 2222 ${SSH_MOCK_FILE_HOST}:/tmp/file ." ]]
 }
 
+@test "sshpass -e ssh -p 2222 environment.example.com" {
+	run __sshWrapper ssh -p 2222 "${SSH_MOCK_ENV_HOST}"
+
+	[[ "${status}" == 0 ]]
+	[[ "${output}" == "mocked-sshpass -e ${PATH_MOCKS_DIR}/ssh -p 2222 ${SSH_MOCK_ENV_HOST}" ]]
+}
+
 @test "ssh -p 2222 no-password.example.com" {
 	run __sshWrapper ssh -p 2222 "${SSH_MOCK_NO_PASSWORD_HOST}"
 

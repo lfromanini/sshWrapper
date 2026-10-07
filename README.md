@@ -26,8 +26,11 @@ For example:
 Host my.ssh.server
     LocalCommand sshpass -p thisIsThePassword
 
-Host *.localdomain
+Host my.other.ssh.localdomain
     LocalCommand sshpass -f path/to/fileContainingThePassword
+
+Host *.localdomain
+    LocalCommand sshpass -e
 ```
 
 The original command:
@@ -48,6 +51,14 @@ or, when using a password file:
 sshpass -fpath/to/fileContainingThePassword ssh [args] my.ssh.server [more args]
 ```
 
+or, when using the `SSHPASS` environment variable:
+
+```bash
+sshpass -e ssh [args] my.ssh.server [more args]
+```
+
+> With `-e`, `sshpass` reads the password from the `SSHPASS` environment variable. See the [`sshpass` man page](https://linux.die.net/man/1/sshpass) for more information.
+
 The same logic applies to `scp`.
 
 If no matching `sshpass` entry is found, or if `sshpass` is not installed, the original `ssh` or `scp` command is executed unchanged.
@@ -64,11 +75,16 @@ For example:
 Host my.ssh.server
     LocalCommand sshpass -p thisIsThePassword
 
-Host *.localdomain
+Host my.other.ssh.localdomain
     LocalCommand sshpass -f path/to/fileContainingThePassword
+
+Host *.localdomain
+    LocalCommand sshpass -e
 ```
 
 For `-f`, the password file path supports `~`, `$HOME`, `$PWD`, and other environment variables through `envsubst`.
+
+For `-e`, `sshpass` reads the password from the `SSHPASS` environment variable. The variable must be set in the environment of the shell running `ssh` or `scp`.
 
 #### Limitations
 
@@ -161,8 +177,10 @@ For example:
 chmod 600 ~/.ssh/sshpass
 ```
 
-This method requires storing passwords in an unencrypted plain-text file.
+When using `-p` or `-f`, passwords are stored in an unencrypted plain-text file. The `-e` option instead reads the password from the `SSHPASS` environment variable.
 
-Anyone who can read `~/.ssh/sshpass` can obtain the passwords stored in it. For this reason, using SSH public key authentication is strongly recommended whenever possible.
+Anyone who can read `~/.ssh/sshpass` can obtain passwords stored using `-p` or `-f`. The `SSHPASS` environment variable may also be accessible to processes or users depending on the environment in which it is set.
+
+For this reason, **using SSH public key authentication is strongly recommended whenever possible**.
 
 `sshWrapper` is intended for situations where password authentication is required or otherwise preferred.
