@@ -189,7 +189,6 @@ That's it.
 - `sshpass`
 - `awk`
 - `envsubst`
-- `whereis`
 
 Most of these tools are commonly available by default on Linux systems, but `sshpass` usually needs to be installed separately.
 

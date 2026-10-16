@@ -10,7 +10,11 @@ __sshWrapper()
 
 	case "${cmd}" in
 		ssh|scp)
-			cmd=$( whereis -b "${cmd}" | awk '/: ./ { print $2 ; exit }' )
+			# remove any alias or shell function that could take precedence over the executable when resolving the command with `command -v`
+			unalias "${cmd}" 2>/dev/null || :
+			unset -f "${cmd}" 2>/dev/null || :
+
+			cmd=$( command -v "${cmd}" )
 		;;
 
 		*)
@@ -18,7 +22,6 @@ __sshWrapper()
 		;;
 	esac
 
-	sshpassCmd=$( whereis -b sshpass | awk '/: ./ { print $2 ; exit }' )
 	sshpassArgs=$( command ssh "$@" -F "${fSshWrapperConfig}" -G 2>/dev/null | awk 'tolower($1) == "localcommand" && $2 == "sshpass" { print $3 "\n" $4 ; exit }' )
 	sshpassOption=$( printf '%s' "${sshpassArgs}" | awk 'NR == 1' )
 	sshpassValue=$( printf '%s' "${sshpassArgs}" | awk 'NR == 2' )
@@ -39,7 +42,7 @@ __sshWrapper()
 	esac
 
 	# sshpass not installed or no valid sshpass arg found in `${fSshWrapperConfig}`
-	if [ -z "${sshpassCmd}" ] || [ "${sshpassArgsValid}" = "false" ] ; then
+	if [ -z "$( command -v sshpass || : )" ] || [ "${sshpassArgsValid}" = "false" ] ; then
 		"${cmd}" "$@"
 		return $?
 	fi
@@ -55,7 +58,7 @@ __sshWrapper()
 		sshpassValue=$( printf '%s' "${sshpassValue}" | envsubst )
 	}
 
-	"${sshpassCmd}" "${sshpassOption}${sshpassValue}" "${cmd}" "$@"
+	sshpass "${sshpassOption}${sshpassValue}" "${cmd}" "$@"
 )
 
 alias ssh='__sshWrapper ssh'
