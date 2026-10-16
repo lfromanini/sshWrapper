@@ -2,6 +2,7 @@
 
 function setup() {
 	load 'support/common.bash'
+	load 'support/mocks.bash'
 
 	export PATH="${PATH_MOCKS}"
 
@@ -79,9 +80,7 @@ function teardown() { true ; }
 }
 
 @test "ssh -p 2222 password.example.com when sshpass is not installed" {
-	export SSH_MOCK_SSH_PASS_INSTALLED=false
-
-	run __sshWrapper ssh -p 2222 "${SSH_MOCK_PASSWORD_HOST}"
+	MOCK_SSHPASS_COMMAND_NOT_FOUND=true run __sshWrapper ssh -p 2222 "${SSH_MOCK_PASSWORD_HOST}"
 
 	[[ "${status}" == 0 ]]
 	[[ "${output}" == "mocked-ssh -p 2222 ${SSH_MOCK_PASSWORD_HOST}" ]]
