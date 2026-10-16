@@ -3,12 +3,14 @@ __sshWrapper()
 	set -o errexit
 	set -o nounset
 
+	fSshWrapperConfig=${SSH_WRAPPER_CONFIG:-"${HOME}"/.ssh/sshpass}
+
 	cmd=${1}
 	shift
 
 	case "${cmd}" in
 		ssh|scp)
-			cmd=$( whereis -b "${cmd}" | awk '{ print $2 }' )
+			cmd=$( whereis -b "${cmd}" | awk '/: ./ { print $2 ; exit }' )
 		;;
 
 		*)
@@ -16,8 +18,8 @@ __sshWrapper()
 		;;
 	esac
 
-	sshpassCmd=$( whereis -b sshpass | awk '{ print $2 }' )
-	sshpassArgs=$( command ssh "$@" -F "${HOME}/.ssh/sshpass" -G 2>/dev/null | awk 'tolower($1) == "localcommand" && $2 == "sshpass" { print $3 "\n" $4 ; exit }' )
+	sshpassCmd=$( whereis -b sshpass | awk '/: ./ { print $2 ; exit }' )
+	sshpassArgs=$( command ssh "$@" -F "${fSshWrapperConfig}" -G 2>/dev/null | awk 'tolower($1) == "localcommand" && $2 == "sshpass" { print $3 "\n" $4 ; exit }' )
 	sshpassOption=$( printf '%s' "${sshpassArgs}" | awk 'NR == 1' )
 	sshpassValue=$( printf '%s' "${sshpassArgs}" | awk 'NR == 2' )
 	sshpassArgsValid=true
@@ -36,7 +38,7 @@ __sshWrapper()
 		;;
 	esac
 
-	# sshpass not installed or no valid sshpass arg found in ~/.ssh/sshpass
+	# sshpass not installed or no valid sshpass arg found in `${fSshWrapperConfig}`
 	if [ -z "${sshpassCmd}" ] || [ "${sshpassArgsValid}" = "false" ] ; then
 		"${cmd}" "$@"
 		return $?

@@ -57,7 +57,7 @@ or, when using the `SSHPASS` environment variable:
 sshpass -e ssh [args] my.ssh.server [more args]
 ```
 
-> With `-e`, `sshpass` reads the password from the `SSHPASS` environment variable. See the [`sshpass` man page](https://linux.die.net/man/1/sshpass) for more information.
+> With `-e`, `sshpass` reads the password from the `SSHPASS` environment variable. See the [sshpass man page](https://linux.die.net/man/1/sshpass) for more information.
 
 The same logic applies to `scp`.
 
@@ -85,6 +85,32 @@ Host *.localdomain
 For `-f`, the password file path supports `~`, `$HOME`, `$PWD`, and other environment variables through `envsubst`.
 
 For `-e`, `sshpass` reads the password from the `SSHPASS` environment variable. The variable must be set in the environment of the shell running `ssh` or `scp`.
+
+#### Custom configuration path
+
+By default, `sshWrapper` reads its configuration from `~/.ssh/sshpass`. To use a different file, set the `SSH_WRAPPER_CONFIG` environment variable to the desired path.
+
+For example, to use a custom configuration file for a single command:
+
+```bash
+SSH_WRAPPER_CONFIG="$HOME/.ssh/sshpass-custom" ssh my.ssh.server
+```
+
+The same applies to `scp`:
+
+```bash
+SSH_WRAPPER_CONFIG="$HOME/.ssh/sshpass-custom" scp file.txt my.ssh.server:/tmp/
+```
+
+To use a custom configuration file for all `ssh` and `scp` commands in the current shell session, export the variable:
+
+```bash
+export SSH_WRAPPER_CONFIG="$HOME/.ssh/sshpass-custom"
+```
+
+If `SSH_WRAPPER_CONFIG` is unset or empty, `sshWrapper` falls back to `~/.ssh/sshpass`.
+
+The custom file follows the same configuration format and limitations described above.
 
 #### Limitations
 
